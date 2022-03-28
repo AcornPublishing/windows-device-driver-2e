@@ -1,0 +1,53 @@
+;
+; HJSTOR.inf
+;
+
+[Version]
+signature="$Windows NT$"
+Class=SCSIAdapter
+ClassGUID={4D36E97B-E325-11CE-BFC1-08002BE10318}
+Provider="Hajesoft, Inc."
+DriverVer=
+CatalogFile=HJSTOR.cat
+
+[DestinationDirs]
+DefaultDestDir = 12
+
+
+[SourceDisksNames]
+1 = %DiskName%,,,""
+
+[SourceDisksFiles]
+HJSTOR.sys=1
+
+[Manufacturer]
+%ManufacturerName%=Standard,NT$ARCH$
+
+[Standard.NT$ARCH$]
+%DeviceDesc% = HJSTOR_DEVICE, HJSTOR_VIRTUAL_DEVICE
+
+[HJSTOR_DEVICE]
+CopyFiles=@HJSTOR.sys
+
+[HJSTOR_DEVICE.Services]
+AddService = HJSTOR,%SPSVCINST_ASSOCSERVICE%,Haje_Service_Inst
+
+[Haje_Service_Inst]
+ServiceType    = %SERVICE_KERNEL_DRIVER%
+StartType      = %SERVICE_MANUAL_START%
+ErrorControl   = %SERVICE_ERROR_NORMAL%
+ServiceBinary  = %12%\HJSTOR.sys 
+LoadOrderGroup	= SCSI Miniport
+AddReg         = scsiminiport_addreg
+
+[scsiminiport_addreg]
+HKR, "Parameters\PnpInterface", "1", 0x00010001, 0x00000001
+
+[Strings]
+ManufacturerName="Hajesoft, Inc."
+DiskName="HJSTOR Source Disk"
+DeviceDesc 	= "HJSTOR_DEVICE"
+SPSVCINST_ASSOCSERVICE = 0x00000002
+SERVICE_KERNEL_DRIVER  = 1
+SERVICE_MANUAL_START    = 3
+SERVICE_ERROR_NORMAL  = 1

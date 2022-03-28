@@ -1,0 +1,3 @@
+echo Press any key before unloading service....
+pause
+sc stop TableHooker

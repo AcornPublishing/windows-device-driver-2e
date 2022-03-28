@@ -1,0 +1,55 @@
+[Version]
+Signature="$WINDOWS NT$"
+Class=%PCISampleClass%
+ClassGuid={AF144A0C-98DC-422d-9F4C-26084EB51092}
+Provider=%PROVIDER%
+DriverVer=
+CatalogFile=PCISample.cat
+
+[ClassInstall32]
+AddReg=AddHwClass
+
+[AddHwClass]
+HKR,,,,%PCISampleClass%
+HKR,,Icon,,-27
+
+[ControlFlags]
+ExcludeFromSelect=*
+
+[DestinationDirs]
+DefaultDestDir = 12
+
+[SourceDisksNames]
+1 = %DiskName%,,,""
+
+[SourceDisksFiles]
+PCISample.sys=1
+
+[Manufacturer]
+%ManufacturerName%=Standard,NT$ARCH$
+
+[Standard.NT$ARCH$]
+%PCISampleDevice% =PCISampleInst, PCI\VEN_1234&DEV_5678
+
+[PCISampleInst.NT]
+CopyFiles = PCISampleInst.NT.Copy
+
+[PCISampleInst.NT.Copy]
+PCISample.sys
+
+[PCISampleInst.NT.Services]
+AddService= PCISample, 0x00000002, PCISampleInst_Service_Inst
+
+[PCISampleInst_Service_Inst]
+DisplayName     = "Hajesoft PCI Sample Device Driver"                           
+ServiceType     = 1                  ; SERVICE_KERNEL_DRIVER
+StartType       = 3                  ; SERVICE_DEMAND_START
+ErrorControl    = 1                  ; SERVICE_ERROR_NORMAL
+ServiceBinary   = %12%\PCISample.sys   
+
+[Strings]
+ManufacturerName="Hajesoft"
+DiskName="Hajesoft PCI Sample Device Driver Disk"
+PROVIDER="Hajesoft"
+PCISampleDevice="Hajesoft PCI Sample Device"
+PCISampleClass="Hajesoft PCI Sample Class"

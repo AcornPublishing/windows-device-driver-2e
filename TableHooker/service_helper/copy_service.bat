@@ -1,0 +1,1 @@
+copy /y .\TableHooker.sys %SYSTEMROOT%\system32\drivers\TableHooker.sys

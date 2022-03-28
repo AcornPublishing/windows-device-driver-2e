@@ -1,0 +1,48 @@
+;
+; HIDClassSample.inf
+;
+
+[Version]
+Signature="$WINDOWS NT$"
+Class=HIDClass
+ClassGuid={745a17a0-74d3-11d0-b6fe-00a0c90f57da}
+Provider="Hajesoft, Inc."
+DriverVer=
+CatalogFile=HIDSample.cat
+
+[DestinationDirs]
+DefaultDestDir = 12
+
+[SourceDisksNames]
+1 = %DiskName%,,,""
+
+[SourceDisksFiles]
+HIDSAMPLE.sys=1
+
+[Manufacturer]
+%ManufacturerName%=Standard,NT$ARCH$
+
+[Standard.NT$ARCH$]
+%DeviceDesc% = HAJESAMPLE, USB\VID_1234&PID_5678
+
+[HAJESAMPLE]
+CopyFiles=@HIDSAMPLE.sys
+
+[HAJESAMPLE.Services]
+AddService = HIDSAMPLE,%SPSVCINST_ASSOCSERVICE%,Haje_Service_Inst
+
+[Haje_Service_Inst]
+ServiceType    = %SERVICE_KERNEL_DRIVER%
+StartType      = %SERVICE_MANUAL_START%
+ErrorControl   = %SERVICE_ERROR_NORMAL%
+ServiceBinary  = %12%\HIDSAMPLE.sys 
+LoadOrderGroup = PNP Filter
+
+[Strings]
+ManufacturerName="Hajesoft, Inc."
+DiskName="HIDClassSample Source Disk"
+DeviceDesc 	= "Hajesoft Sample HIDSAMPLE Device"
+SPSVCINST_ASSOCSERVICE = 0x00000002
+SERVICE_KERNEL_DRIVER  = 1
+SERVICE_MANUAL_START    = 3
+SERVICE_ERROR_NORMAL  = 1

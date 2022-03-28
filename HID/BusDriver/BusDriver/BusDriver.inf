@@ -1,0 +1,47 @@
+;
+; BusDriver.inf
+;
+
+[Version]
+Signature="$WINDOWS NT$"
+Class=Hajesoft
+ClassGuid = {cfb15040-5bc7-11d3-b194-0060b0efd334}
+Provider="Hajesoft, Inc."
+DriverVer=
+CatalogFile=BusDriver.cat
+
+[DestinationDirs]
+DefaultDestDir = 12
+
+[SourceDisksNames]
+1 = %DiskName%,,,""
+
+[SourceDisksFiles]
+BusDriver.sys=1
+
+[Manufacturer]
+%ManufacturerName%=Standard,NT$ARCH$
+
+[Standard.NT$ARCH$]
+%DeviceDesc% = BUSDRIVERSAMPLE, HAJESOFTVIRTUALDEVICE
+
+[BUSDRIVERSAMPLE]
+CopyFiles=@BUSDRIVER.sys
+
+[BUSDRIVERSAMPLE.Services]
+AddService = BUSDRIVER,%SPSVCINST_ASSOCSERVICE%,Haje_Service_Inst
+
+[Haje_Service_Inst]
+ServiceType    = %SERVICE_KERNEL_DRIVER%
+StartType      = %SERVICE_MANUAL_START%
+ErrorControl   = %SERVICE_ERROR_NORMAL%
+ServiceBinary  = %12%\BUSDRIVER.sys 
+
+[Strings]
+ManufacturerName="Hajesoft, Inc"
+DiskName="BusDriver Source Disk"
+DeviceDesc 	= "Hajesoft Virtual USB BUSDRIVER Device"
+SPSVCINST_ASSOCSERVICE = 0x00000002
+SERVICE_KERNEL_DRIVER  = 1
+SERVICE_MANUAL_START    = 3
+SERVICE_ERROR_NORMAL  = 1

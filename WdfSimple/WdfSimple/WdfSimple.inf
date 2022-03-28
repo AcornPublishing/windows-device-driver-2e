@@ -1,0 +1,91 @@
+;
+; WdfSimple.inf
+;
+
+[Version]
+Signature="$WINDOWS NT$"
+Class=WDFSIMPLE
+ClassGuid={B85B7C50-6A01-11d2-B841-00C04FAD5178}
+Provider=%PROVIDER%
+CatalogFile=WdfSimple.cat
+DriverVer= ; TODO: set DriverVer in stampinf property pages
+
+; ================= Class section =====================
+
+[ClassInstall32]
+Addreg=WDFSIMPLEClassReg
+
+[WDFSIMPLEClassReg]
+HKR,,,0,%ClassName%
+HKR,,Icon,,-5
+HKR,,DeviceCharacteristics,0x10001,0x100                 ;Use same security checks on relative opens
+HKR,,Security,,"D:P(A;;GA;;;SY)(A;;GA;;;BA)(A;;GA;;;LS)" ;Allow generic all access to system, built-in Admin, and Local System.
+                                                         ;This one overrides the security set by the driver
+;*****************************************
+; Install Section
+;*****************************************
+
+[Manufacturer]
+%StdMfg%=Standard,NT$ARCH$
+
+[Standard.NT$ARCH$]
+%WDFSIMPLEDevice.DeviceDesc%=WDFSIMPLE_Device, HAJESOFT_WDFSIMPLEDEVICE_WDF
+
+[WDFSIMPLE_Device.NT]
+CopyFiles=WDFSIMPLE_Device.NT.Copy
+
+[WDFSIMPLE_Device.NT.Copy]
+WDFSIMPLE.sys
+
+;-------------- Service installation
+
+[WDFSIMPLE_Device.NT.Services]
+AddService = WDFSIMPLE, %SPSVCINST_ASSOCSERVICE%, WDFSIMPLE_Service_Inst
+
+[WDFSIMPLE_Service_Inst]
+DisplayName    = %WDFSIMPLE.SVCDESC%
+ServiceType    = 1               ; SERVICE_KERNEL_DRIVER
+StartType      = 3               ; SERVICE_DEMAND_START
+ErrorControl   = 1               ; SERVICE_ERROR_NORMAL
+ServiceBinary  = %12%\WDFSIMPLE.sys
+LoadOrderGroup = Extended Base
+
+
+[SourceDisksNames]
+1 = %DiskId1%,,,""
+
+[SourceDisksFiles]
+WDFSIMPLE.sys  = 1,,
+WdfCoInstaller$KMDFCOINSTALLERVERSION$.dll=1 ; make sure the number matches with SourceDisksNames
+
+;
+;--- WDFSIMPLE_Device WDF Coinstaller installation ------
+;
+[DestinationDirs]
+WDFSIMPLE_Device_CoInstaller_CopyFiles = 11
+WDFSIMPLE_Device.NT.Copy = 12
+
+[WDFSIMPLE_Device.NT.CoInstallers]
+AddReg=WDFSIMPLE_Device_CoInstaller_AddReg
+CopyFiles=WDFSIMPLE_Device_CoInstaller_CopyFiles
+
+[WDFSIMPLE_Device_CoInstaller_AddReg]
+HKR,,CoInstallers32,0x00010000, "WdfCoInstaller$KMDFCOINSTALLERVERSION$.dll,WdfCoInstaller"
+
+[WDFSIMPLE_Device_CoInstaller_CopyFiles]
+WdfCoInstaller$KMDFCOINSTALLERVERSION$.dll
+
+[WDFSIMPLE_Device.NT.Wdf]
+KmdfService = WDFSIMPLE, WDFSIMPLE_wdfsect
+[WDFSIMPLE_wdfsect]
+KmdfLibraryVersion = $KMDFVERSION$
+
+[Strings]
+SPSVCINST_ASSOCSERVICE= 0x00000002
+PROVIDER = "Hajesoft"
+StdMfg = "WDFSIMPLE Device"
+ClassName = "Hajesoft(WDF)"
+DiskId1 = "WDFSIMPLE Device Installation Disk #1"
+WDFSIMPLEDevice.DeviceDesc = "Hajesoft WDFSIMPLE"
+WDFSIMPLE.SVCDESC = "Hajesoft WDFSIMPLE Device Driver"
+

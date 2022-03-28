@@ -1,0 +1,1 @@
+sc create TableHooker binpath= %SYSTEMROOT%\system32\drivers\TableHooker.sys type= kernel start= demand

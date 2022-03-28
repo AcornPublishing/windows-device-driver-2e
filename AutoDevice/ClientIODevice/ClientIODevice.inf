@@ -1,0 +1,57 @@
+;
+; ClientIODevice.inf
+;
+
+[Version]
+Signature="$WINDOWS NT$"
+Class=Hajesoft
+ClassGuid = {cfb15040-5bc7-11d3-b194-0060b0efd334}
+Provider="Hajesoft, Inc."
+DriverVer=
+CatalogFile=CLIENTIODEVICE.cat
+
+[DestinationDirs]
+DefaultDestDir = 12
+
+
+[SourceDisksNames]
+1 = %DiskName%,,,""
+
+[SourceDisksFiles]
+CLIENTIODEVICE.sys=1
+
+[ClassInstall32]
+Addreg=AddHwClass
+
+[AddHwClass]
+HKR,,,,%ClassName%
+HKR,,Icon,,"-5"
+
+
+[Manufacturer]
+%ManufacturerName%=Standard,NT$ARCH$
+
+[Standard.NT$ARCH$]
+%DeviceDesc% = CLIENTIODEVICE, HAJESOFT_VIRTUAL_PNPID_FOR_BUSDRIVERDEVICE
+
+[CLIENTIODEVICE]
+CopyFiles=@CLIENTIODEVICE.sys
+
+[CLIENTIODEVICE.Services]
+AddService = CLIENTIODEVICE,%SPSVCINST_ASSOCSERVICE%,Haje_Service_Inst
+
+[Haje_Service_Inst]
+ServiceType    = %SERVICE_KERNEL_DRIVER%
+StartType      = %SERVICE_MANUAL_START%
+ErrorControl   = %SERVICE_ERROR_NORMAL%
+ServiceBinary  = %12%\CLIENTIODEVICE.sys 
+
+[Strings]
+ManufacturerName="Hajesoft, Inc."
+DiskName="ClientIODevice Source Disk"
+ClassName 	= "Hajesoft"
+DeviceDesc 	= "Hajesoft CLIENTIODEVICE Device"
+SPSVCINST_ASSOCSERVICE = 0x00000002
+SERVICE_KERNEL_DRIVER  = 1
+SERVICE_MANUAL_START    = 3
+SERVICE_ERROR_NORMAL  = 1

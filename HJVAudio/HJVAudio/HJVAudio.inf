@@ -1,0 +1,114 @@
+[Version]
+
+Signature	= "$Windows NT$"
+Class		= MEDIA
+Provider	= %HJ_PROVIDER%
+ClassGUID	= {4d36e96c-e325-11ce-bfc1-08002be10318}
+DriverVer 	= 
+CatalogFile	= HJVAUDIO.cat
+
+
+[SourceDisksNames]
+1="HajesoftVirtualAudio Controller",""
+
+[SourceDisksFiles]
+HJVAUDIO.sys=1
+
+[Manufacturer]
+%MfgName%=HJVAUDIO,NT$ARCH$
+
+[HJVAUDIO.NT$ARCH$]
+%HJVAUDIO_SAMPLE.DeviceDesc%	= HJVAUDIO_SAMPLE,0000,*HJVAUDIO
+
+[DestinationDirs]
+HJVAUDIO_SAMPLE.CopyList	= 10,system32\drivers
+
+[HJVAUDIO_SAMPLE.CopyList]
+HJVAUDIO.sys
+
+[HJVAUDIO_SAMPLE.AddReg]
+HKR,,AssociatedFilters,,"wdmaud,swmidi,redbook"
+HKR,,Driver,,HJVAUDIO.sys
+HKR,,NTMPDriver,,"HJVAUDIO.sys,sbemul.sys"
+
+HKR,Drivers,SubClasses,,"wave,midi,mixer"
+
+HKR,Drivers\wave\wdmaud.drv,Driver,,wdmaud.drv
+HKR,Drivers\midi\wdmaud.drv,Driver,,wdmaud.drv
+HKR,Drivers\mixer\wdmaud.drv,Driver,,wdmaud.drv
+
+HKR,Drivers\wave\wdmaud.drv,Description,,%HJVAUDIO_SAMPLE.DeviceDesc%
+HKR,Drivers\midi\wdmaud.drv,Description,,%WAD_MIDI%
+HKR,Drivers\mixer\wdmaud.drv,Description,,%HJVAUDIO_SAMPLE.DeviceDesc%
+
+HKLM,%MediaCategories%\%WAD.NameGuid%,Name,,%WAD.Name%
+
+
+;======================================================
+; COMMON
+;======================================================
+[WAD.I.Wave]
+AddReg	=	WAD.I.Wave.AddReg
+
+[WAD.I.Wave.AddReg]
+HKR,,CLSID,,%Proxy.CLSID%
+HKR,,FriendlyName,,%WAD.Wave.szPname%
+
+[WAD.I.Topo]
+AddReg=WAD.I.Topo.AddReg
+
+[WAD.I.Topo.AddReg]
+HKR,,CLSID,,%Proxy.CLSID%
+HKR,,FriendlyName,,%WAD.Topo.szPname%
+
+;======================================================
+; HJVAUDIO_SAMPLE
+;======================================================
+[HJVAUDIO_SAMPLE.NT]
+Include		= ks.inf,wdmaudio.inf
+Needs		= KS.Registration, WDMAUDIO.Registration
+CopyFiles	= HJVAUDIO_SAMPLE.CopyList
+AddReg		= HJVAUDIO_SAMPLE.AddReg
+
+[HJVAUDIO_SAMPLE.NT.Interfaces]
+AddInterface	= %KSCATEGORY_AUDIO%, %KSNAME_Wave%, WAD.I.Wave
+AddInterface	= %KSCATEGORY_RENDER%, %KSNAME_Wave%, WAD.I.Wave
+AddInterface	= %KSCATEGORY_AUDIO%, %KSNAME_Topology%, WAD.I.Topo
+
+[HJVAUDIO_SAMPLE.NT.Services]
+include		= wdmaudio.inf
+needs		= wdmaudio.registration.services
+AddService	= HJVAUDIO,0x00000002,WAD_Service_Inst
+
+[WAD_Service_Inst]
+DisplayName	= %WAD.SvcDesc%
+ServiceType	= 1
+StartType	= 3
+ErrorControl	= 1
+ServiceBinary	= %10%\system32\drivers\HJVAUDIO.sys
+
+;======================================================
+; COMMON
+;======================================================
+[Strings]
+HJ_PROVIDER		= "Hajesoft"
+MfgName			= "HajesoftVirtualAudio Controller"
+HJVAUDIO_SAMPLE.DeviceDesc	= "HajesoftVirtualAudio Controller"
+
+WAD.Wave.szPname	= "HajeHJVAUDIO Wave"
+WAD.Topo.szPname	= "HajeHJVAUDIO Topology"
+WAD_MIDI		= "HajesoftVirtualAudio Controller"
+
+Proxy.CLSID		= "{17CCA71B-ECD7-11D0-B908-00A0C9223196}"
+KSCATEGORY_AUDIO	= "{6994AD04-93EF-11D0-A3CC-00A0C9223196}"
+KSCATEGORY_RENDER	= "{65E8773E-8F56-11D0-A3B9-00A0C9223196}"
+
+KSNAME_Wave		= "Wave"
+KSNAME_Topology		= "Topology"
+
+WAD.SvcDesc		= "HajeHJVAUDIO"
+
+MediaCategories		= "SYSTEM\CurrentControlSet\Control\MediaCategories"
+
+WAD.NameGuid		= "{946A7B1A-EBBC-422a-A81F-F07C8D40D3B5}"
+WAD.Name		= "HajeHJVAUDIO"

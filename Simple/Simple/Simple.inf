@@ -1,0 +1,55 @@
+;
+; Simple.inf
+;
+
+[Version]
+Signature="$WINDOWS NT$"
+Class=Hajesoft
+ClassGuid = {cfb15040-5bc7-11d3-b194-0060b0efd354}
+Provider="Hajesoft, Inc."
+DriverVer=
+CatalogFile=Simple.cat
+
+[DestinationDirs]
+DefaultDestDir = 12
+
+[SourceDisksNames]
+1 = %DiskName%,,,""
+
+[SourceDisksFiles]
+SIMPLE.sys=1
+
+[ClassInstall32]
+Addreg=AddHwClass
+
+[AddHwClass]
+HKR,,,,%ClassName%
+HKR,,Icon,,"-5"
+
+[Manufacturer]
+%Mfg%=Standard,NT$ARCH$
+
+[Standard.NT$ARCH$]
+%DeviceDesc% = HAJESAMPLE, HAJESOFT_SIMPLEDEVICE
+
+[HAJESAMPLE]
+CopyFiles=@SIMPLE.sys
+
+[HAJESAMPLE.Services]
+AddService = SIMPLE,%SPSVCINST_ASSOCSERVICE%,Haje_Service_Inst
+
+[Haje_Service_Inst]
+ServiceType    = %SERVICE_KERNEL_DRIVER%
+StartType      = %SERVICE_MANUAL_START%
+ErrorControl   = %SERVICE_ERROR_NORMAL%
+ServiceBinary  = %12%\SIMPLE.sys 
+
+[Strings]
+Mfg="Hajesoft, Inc."
+ClassName="Hajesoft"
+DeviceDesc="Hajesoft Simple Device"
+DiskName="Simple Source Disk"
+SPSVCINST_ASSOCSERVICE=0x00000002
+SERVICE_KERNEL_DRIVER=1
+SERVICE_MANUAL_START=3
+SERVICE_ERROR_NORMAL=1

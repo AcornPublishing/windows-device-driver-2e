@@ -1,0 +1,51 @@
+;
+; HJSCSI.inf
+;
+
+[Version]
+Signature="$WINDOWS NT$"
+Class=SCSIAdapter
+ClassGUID={4D36E97B-E325-11CE-BFC1-08002BE10318}
+Provider=%ManufacturerName%
+DriverVer=
+CatalogFile=HJSCSI.cat
+
+[DestinationDirs]
+DefaultDestDir = 12
+
+[SourceDisksNames]
+1 = %DiskName%,,,""
+
+[SourceDisksFiles]
+HJSCSI.sys = 1
+
+[Manufacturer]
+%ManufacturerName%=Standard,NT$ARCH$
+
+[Standard.NT$ARCH$]
+%DeviceDesc%= Hajesoft_SCSI_Inst,ROOT\VIRTUAL_HAJESOFT_SAMPLE
+
+[Hajesoft_SCSI_Inst]
+CopyFiles = @HJSCSI.sys
+
+[Hajesoft_SCSI_Inst.Services]
+AddService = Hajesoft_SCSI, 2, Hajesoft_SCSI_Service_Inst
+
+[Hajesoft_SCSI_Service_Inst]
+ServiceType	= 1		; SERVICE_KERNEL_DRIVER
+StartType	= 3		; SERVICE_BOOT_START
+ErrorControl	= 1		; SERVICE_ERROR_NORMAL
+ServiceBinary   = %12%\HJSCSI.sys
+LoadOrderGroup	= SCSI Miniport
+AddReg         = pnpsafe_addreg
+
+[pnpsafe_addreg]
+HKR, "Parameters\PnpInterface", "5", 0x00010001, 0x00000001
+
+[cardbus_interface_type]
+HKR, "ScsiPort", "LegacyInterfaceType", 0x00010001, 0x00000005
+
+[Strings]
+ManufacturerName="Hajesoft""
+DiskName="HJSCSI Source Disk"
+DeviceDesc="Hajesoft SCSI Miniport Device"
